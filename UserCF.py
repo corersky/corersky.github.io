@@ -35,8 +35,27 @@ def UserSimilarity(train):
 	return W
 
 
+#TOP[N]
+def Recommend(user,train,W,K=3):
+	rank = dict()
+	interacted_items = train [user]
+	print interacted_items
+
+	for v,wuv in sorted(W[user].items(),key=lambda x:x[1],reverse=True)[0:K]:
+		for i in train[v]:
+			if i in interacted_items:
+				continue
+			rank.setdefault(i,0) 
+			rank[i] += wuv
+	return rank
+
 train={'A':['a','b','d'],'B':['a','c'],'C':['b','e'],'D':['c','d','e']}
 F = UserSimilarity(train)
 print F
-
 #{'A': {'C': 0.4082482904638631, 'B': 0.4082482904638631, 'D': 0.3333333333333333}, 'C': {'A': 0.4082482904638631, 'D': 0.4082482904638631}, 'B': {'A': 0.4082482904638631, 'D': 0.4082482904638631}, 'D': {'A': 0.3333333333333333, 'C': 0.4082482904638631, 'B': 0.4082482904638631}}
+
+R=Recommend('A',train,F,3)
+
+print R
+
+#{'c': 0.7415816237971964, 'e': 0.7415816237971964}
